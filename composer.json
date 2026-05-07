@@ -1,8 +1,8 @@
 {
-  "name": "morphp/medas-placeholder",
-  "description": "Medas placeholder",
+  "name": "morphp/medas-pdo-mysql-migration-builder",
+  "description": "Medas PDO MySQL Migration Builder",
   "keywords": [
-    "placeholder"
+    "storage"
   ],
   "authors": [
     {
@@ -22,12 +22,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Medas\\Placeholder\\": "src/"
+      "Medas\\PdoMysqlMigrationBuilder\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Medas\\PlaceholderTest\\": "tests/"
+      "Medas\\PdoMysqlMigrationBuilderTest\\": "tests/"
     }
   }
 }
