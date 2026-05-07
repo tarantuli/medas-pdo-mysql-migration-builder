@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace Medas\PdoMysqlMigrationBuilder\Types;
 
 use Medas\Core\Attributes\Service;
-use Medas\PdoStorage\Database;
-use Medas\PdoStorage\Drivers\Interfaces\TypeHandler as TypeHandlerInterface;
-use Medas\MigrationBuilder\Structure\Blueprint\{Field};
+use Medas\MigrationBuilder\Structure\Blueprint\Field;
 use Medas\StorageManager\Type;
 
 #[Service]
-readonly class TypeHandler implements TypeHandlerInterface
+readonly class TypeHandler
 {
     public function __construct(
         private BinaryHandler     $binaryHandler,
@@ -26,7 +24,7 @@ readonly class TypeHandler implements TypeHandlerInterface
     {
     }
 
-    public function getBaseDefinition(Database $database, Field $field): string|null
+    public function getBaseDefinition(Field $field): string|null
     {
         return match ($field->type) {
             Type::Binary => $this->binaryHandler->handle($field),

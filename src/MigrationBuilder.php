@@ -6,26 +6,37 @@ namespace Medas\PdoMysqlMigrationBuilder;
 
 use Medas\Core\Attributes\Service;
 use Medas\FileBuilder\PhpClass\MethodDefinition;
-use Medas\PdoStorage\{Database, PdoStorageController, Queries\Query};
-use Medas\StorageManager\Interfaces\Storage;
-use Medas\StorageManager\StorageManager;
+use Medas\MigrationBuilder\MigrationBuilder as MigraMigrationBuilder;
 use Medas\MigrationBuilder\Structure\{Blueprint, Changes\ChangeFinder};
-use Medas\StorageManager\UnitOfWork\{ActionSet, Priority};
+use Medas\PdoStorage\{Database, PdoStorageController, Queries\Query};
+use Medas\StorageManager\{
+    Interfaces\Storage,
+    StorageManager,
+    UnitOfWork\ActionSet,
+    UnitOfWork\Priority
+};
 
 #[Service]
-readonly class MigrationBuilder implements \Medas\MigrationBuilder\MigrationBuilder
+readonly class MigrationBuilder implements MigraMigrationBuilder
 {
     public function __construct(
         private AlterTableBuilder    $alterTableBuilder,
         private ChangeFinder         $changeFinder,
         private CreateTableBuilder   $createTableBuilder,
         private PdoStorageController $pdoStorageController,
+        private TableStructureFinder $tableStructureFinder,
     )
     {
     }
 
+    public function handles(Storage $storage): bool
+    {
+        /** @noinspection PhpConditionAlreadyCheckedInspection */
+        return $storage instanceof Database;
+    }
+
     public function build(
-        Storage          $storage,
+        Storage|Database $storage,
         Blueprint        $expectedStructure,
         MethodDefinition $migrateMethod,
         MethodDefinition $undoMethod,
@@ -61,18 +72,18 @@ PHP;
     }
 
     public function buildActions(
-        Storage   $storage,
-        Blueprint $blueprint,
-        bool      $ignoreExistingStructure = false,
+        Storage|Database $storage,
+        Blueprint        $blueprint,
+        bool             $ignoreExistingStructure = false,
     ): ActionSet
     {
-        $driverHandler = $this->pdoStorageController->getDatabaseController($storage)->driverHandler;
+        assert($storage instanceof Database);
 
         if ($ignoreExistingStructure) {
             $existingStructure = null;
         }
         else {
-            $existingStructure = $driverHandler->tableStructureFinder()->find($this->pdoStorageController->store(
+            $existingStructure = $this->tableStructureFinder->find($this->pdoStorageController->store(
                 $blueprint->name,
                 $storage
             ));
@@ -81,17 +92,11 @@ PHP;
         if ($existingStructure === null) {
             return $this->createTableBuilder->create($storage, $blueprint);
         }
-        else {
-            $changes = $this->changeFinder->find($blueprint, $existingStructure);
 
-            return $changes
-                ? $this->alterTableBuilder->create($storage, $blueprint, $changes)
-                : new ActionSet();
-        }
-    }
+        $changes = $this->changeFinder->find($blueprint, $existingStructure);
 
-    public function handles(Storage $storage): bool
-    {
-        return $storage instanceof Database;
+        return $changes
+            ? $this->alterTableBuilder->create($storage, $blueprint, $changes)
+            : new ActionSet();
     }
 }

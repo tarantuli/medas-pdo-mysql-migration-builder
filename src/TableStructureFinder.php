@@ -6,17 +6,15 @@ namespace Medas\PdoMysqlMigrationBuilder;
 
 use Medas\Core\Attributes\Service;
 use Medas\EntityManager\Attributes\Relations\Action;
-use Medas\PdoStorage\Drivers\Interfaces\TableStructureFinder as TableStructureFinderInterface;
-use Medas\PdoStorage\PdoStorageController;
-use Medas\PdoStorage\Table;
 use Medas\MigrationBuilder\Structure\{Blueprint, Blueprint\ForeignKey, Blueprint\Index};
+use Medas\PdoStorage\Table;
 
 #[Service]
-readonly class TableStructureFinder implements TableStructureFinderInterface
+readonly class TableStructureFinder
 {
     public function __construct(
-        private DefinitionToFieldConverter $definitionToFieldConverter,
-        private PdoStorageController       $pdoStorageController,
+        private DefinitionToFieldConverter                      $definitionToFieldConverter,
+        private TableStructureFinder\TableStructureStringFinder $tableStructureStringFinder,
     )
     {
     }
@@ -25,8 +23,7 @@ readonly class TableStructureFinder implements TableStructureFinderInterface
     {
         $job = new TableStructureFinder\Job($table->storage(), $table);
 
-        $job->createTable
-            = $this->pdoStorageController->getDatabaseController($table->database)->driverHandler->tableStructureString($table);
+        $job->createTable = $this->tableStructureStringFinder->find($table);
 
         if ($job->createTable === null) {
             return null;
@@ -94,9 +91,7 @@ readonly class TableStructureFinder implements TableStructureFinderInterface
             $names = $this->getNames($match['fields']);
 
             foreach ($names as $name) {
-                $field = $job->blueprint->fieldByName($name);
-
-                $index->addField($field);
+                $index->addField($job->blueprint->fieldByName($name));
             }
 
             $index->isUnique = $match['isUnique'] !== '';

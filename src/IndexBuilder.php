@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Medas\PdoMysqlMigrationBuilder;
 
 use Medas\Core\Attributes\Service;
-use Medas\PdoStorage\{Database, Drivers\DriverHandler};
 use Medas\MigrationBuilder\Structure\Blueprint\{Field, Index};
+use Medas\PdoStorage\{Database, Drivers\DriverHandler};
 
 #[Service]
 readonly class IndexBuilder

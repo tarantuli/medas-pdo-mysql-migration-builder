@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Medas\PdoMysqlMigrationBuilder\TableStructureFinder;
 
-use Medas\PdoStorage\{Database, Table};
 use Medas\MigrationBuilder\Structure\Blueprint;
+use Medas\PdoStorage\{Database, Table};
 
 class Job
 {

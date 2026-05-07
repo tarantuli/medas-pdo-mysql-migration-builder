@@ -6,18 +6,19 @@ namespace Medas\PdoMysqlMigrationBuilder;
 
 use Medas\Core\Attributes\{ConfigValue, Service};
 use Medas\EntityManager\Attributes\Relations\Action;
+use Medas\MigrationBuilder\{MigrationBuilderManager, Structure\Blueprint};
 use Medas\PdoStorage\ConfigOptions\JoinTables\TableNamingStrategy;
 use Medas\PdoStorage\Database;
-use Medas\PdoStorage\PdoStorageController;
-use Medas\MigrationBuilder\Structure\Blueprint;
+use Medas\PdoStorage\JoinTables\NamingStrategy;
+use Medas\StorageManager\Type;
 
 #[Service]
 readonly class JoinTableManager
 {
     public function __construct(
         #[ConfigValue(TableNamingStrategy::class)]
-        private NamingStrategy       $namingStrategy,
-        private PdoStorageController $pdoStorageController,
+        private NamingStrategy          $namingStrategy,
+        private MigrationBuilderManager $migrationBuilderManager,
     )
     {
     }
@@ -54,7 +55,7 @@ readonly class JoinTableManager
 
         $orderField = new Blueprint\Field(
             name: 'order',
-            type: Blueprint\Type::Integer,
+            type: Type::Integer,
             hasDefault: true,
             default: 0
         );
@@ -79,10 +80,8 @@ readonly class JoinTableManager
             ->addForeignKey($idForeignKey)
             ->addForeignKey($valueForeignKey);
 
-        return $this->pdoStorageController->migrationBuilder()->buildActions(
-            $database,
-            $joinBlueprint
-        );
+        return $this->migrationBuilderManager->for($database)
+            ->buildActions($database, $joinBlueprint);
     }
 
     private function getIdField(Blueprint $sourceBlueprint): Blueprint\Field

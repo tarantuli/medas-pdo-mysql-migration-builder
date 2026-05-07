@@ -5,16 +5,15 @@ declare(strict_types=1);
 namespace Medas\PdoMysqlMigrationBuilder;
 
 use Medas\Core\Attributes\Service;
-use Medas\PdoStorage\Database;
-use Medas\PdoStorage\Drivers\Interfaces\FieldHandler;
-use Medas\PdoStorage\PdoStorageController;
 use Medas\MigrationBuilder\Structure\Blueprint\Field;
+use Medas\PdoStorage\{Database, PdoStorageController};
 
 #[Service]
-readonly class FieldToDefinitionConverter implements FieldHandler
+readonly class FieldToDefinitionConverter
 {
     public function __construct(
         private PdoStorageController $pdoStorageController,
+        private Types\TypeHandler    $typeHandler,
     )
     {
     }
@@ -38,7 +37,7 @@ readonly class FieldToDefinitionConverter implements FieldHandler
             $default = '';
         }
 
-        $baseDefinition = $driverHandler->typeHandler()->getBaseDefinition($database, $field);
+        $baseDefinition = $this->typeHandler->getBaseDefinition($field);
 
         if ($baseDefinition === null) {
             return null;

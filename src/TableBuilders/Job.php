@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Medas\PdoMysqlMigrationBuilder\TableBuilders;
 
-use Medas\PdoStorage\{Database, Drivers\DriverHandler, Queries\QuerySet};
 use Medas\MigrationBuilder\Structure\{Blueprint, Blueprint\Field, Changes\Changes};
+use Medas\PdoStorage\{Database, Drivers\DriverHandler, Queries\QuerySet};
 
 class Job
 {

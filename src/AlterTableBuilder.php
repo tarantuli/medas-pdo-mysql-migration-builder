@@ -5,19 +5,15 @@ declare(strict_types=1);
 namespace Medas\PdoMysqlMigrationBuilder;
 
 use Medas\Core\Attributes\Service;
-use Medas\PdoStorage\{
-    Database,
-    PdoStorageController,
-    Queries\Query,
-    Queries\QuerySet
-};
 use Medas\MigrationBuilder\Structure\{Blueprint, Changes\Changes};
-use Medas\StorageManager\Type;use Medas\StorageManager\UnitOfWork\Priority;
+use Medas\PdoStorage\{Database, PdoStorageController, Queries\Query, Queries\QuerySet};
+use Medas\StorageManager\{Type, UnitOfWork\Priority};
 
 #[Service]
 readonly class AlterTableBuilder
 {
     public function __construct(
+        private FieldToDefinitionConverter  $fieldToDefinitionConverter,
         private ForeignKeyConstraintBuilder $foreignKeyConstraintBuilder,
         private IndexBuilder                $indexBuilder,
         private JoinTableManager            $joinTableManager,
@@ -63,7 +59,7 @@ readonly class AlterTableBuilder
                 continue;
             }
 
-            $definition = $job->driverHandler->fieldHandler()->buildDefinition(
+            $definition = $this->fieldToDefinitionConverter->buildDefinition(
                 $job->database,
                 $field
             );
@@ -88,7 +84,7 @@ readonly class AlterTableBuilder
                 continue;
             }
 
-            $definition = $job->driverHandler->fieldHandler()->buildDefinition(
+            $definition = $this->fieldToDefinitionConverter->buildDefinition(
                 $job->database,
                 $field
             );

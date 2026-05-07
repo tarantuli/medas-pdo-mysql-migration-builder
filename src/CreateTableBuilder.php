@@ -4,32 +4,25 @@ declare(strict_types=1);
 
 namespace Medas\PdoMysqlMigrationBuilder;
 
-use Medas\Core\Attributes\{ConfigValue, Service};
+use Medas\Core\Attributes\Service;
 use Medas\EntityManager\Attributes\Relations\Action;
-use Medas\PdoMysql\Queries\ForeignKeyConstraintBuilder;
-use Medas\PdoStorage\{
-    Database,
-    JoinTables\JoinTableManager,
-    PdoStorageController,
-    Queries\Query,
-    Queries\QuerySet
+use Medas\MigrationBuilder\{
+    OriginalClassStorageStrategyActionBuilder\ForLinkingStore,
+    Structure\Blueprint
 };
-use Medas\StorageManager\ConfigOptions\OriginalClassStorage\DefaultStrategy;
-use Medas\StorageManager\Inheritance\OriginalClassStorageStrategy;
-use Medas\MigrationBuilder\Structure\Blueprint;
-use Medas\StorageManager\UnitOfWork\Priority;
+use Medas\PdoStorage\{Database, PdoStorageController, Queries\Query, Queries\QuerySet};
+use Medas\StorageManager\{Type, UnitOfWork\Priority};
 
 #[Service]
 readonly class CreateTableBuilder
 {
     public function __construct(
-        private ForeignKeyConstraintBuilder  $foreignKeyConstraintBuilder,
-        private IndexBuilder                 $indexBuilder,
-        private JoinTableManager             $joinTableManager,
-
-        #[ConfigValue(DefaultStrategy::class)]
-        private OriginalClassStorageStrategy $originalClassStorageStrategy,
-        private PdoStorageController         $pdoStorageController,
+        private FieldToDefinitionConverter  $fieldToDefinitionConverter,
+        private ForLinkingStore             $forLinkingStore,
+        private ForeignKeyConstraintBuilder $foreignKeyConstraintBuilder,
+        private IndexBuilder                $indexBuilder,
+        private JoinTableManager            $joinTableManager,
+        private PdoStorageController        $pdoStorageController,
     )
     {
     }
@@ -89,13 +82,13 @@ readonly class CreateTableBuilder
                 }
             }
 
-            if ($field->type === Blueprint\Type::Collection) {
+            if ($field->type === Type::Collection) {
                 $job->collections[] = $field;
 
                 continue;
             }
 
-            $definition = $job->driverHandler->fieldHandler()->buildDefinition(
+            $definition = $this->fieldToDefinitionConverter->buildDefinition(
                 $job->database,
                 $field
             );
@@ -150,7 +143,7 @@ readonly class CreateTableBuilder
             return;
         }
 
-        foreach ($this->originalClassStorageStrategy->buildStoreActions($job->blueprint, $job->database) as $query) {
+        foreach ($this->forLinkingStore->buildStoreActions($job->blueprint, $job->database) as $query) {
             $job->querySet[] = $query;
         }
     }

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Medas\PdoMysqlMigrationBuilder;
 
 use Medas\Core\{Attributes\Service, CaseInsensitiveString, Types\Integer};
+use Medas\MigrationBuilder\Structure\Blueprint\Field;
 use Medas\PdoStorage\Exceptions\{CantDetermineTypeFromDefinition, CantTurnDefinitionIntoVariable};
-use Medas\MigrationBuilder\Structure\Blueprint\{Field};
 use Medas\StorageManager\Type;
 
 #[Service]
@@ -64,7 +64,7 @@ readonly class DefinitionToFieldConverter
 
         $intMatch = $remainder->regexMatch('/((?:tiny|small|medium|big)?int)(?:\(\d+\))?( unsigned)?/i');
         $type = match (true) {
-            $intMatch !== null => Type::Integer,
+            $intMatch !== null, $remainder->startsWith('year(') => Type::Integer,
 
             $remainder->startsWith('varchar('), $remainder->startsWith('char('), $remainder->startsWith('text'), $remainder->endsWith('text')
                 => Type::Text,
@@ -74,9 +74,7 @@ readonly class DefinitionToFieldConverter
 
             $remainder->equals('datetime') => Type::DateTime,
             $remainder->equals('date') => Type::Date,
-            $remainder->equals('float') => Type::Float,
-            $remainder->equals('double') => Type::Float,
-            $remainder->startsWith('year(') => Type::Integer,
+            $remainder->equals('float'), $remainder->equals('double') => Type::Float,
             default => throw new CantDetermineTypeFromDefinition((string) $remainder, $definition),
         };
 
@@ -114,7 +112,6 @@ readonly class DefinitionToFieldConverter
 
         $minLength = 0;
         $maxLength = match (true) {
-            $remainder->equals('tinytext') || $remainder->equals('tinyblob') => Integer::UNSIGNED_1_BYTE_MAX,
             $remainder->equals('text') || $remainder->equals('blob') => Integer::UNSIGNED_2_BYTE_MAX,
             $remainder->equals('mediumtext') || $remainder->equals('mediumblob') => Integer::UNSIGNED_3_BYTE_MAX,
             $remainder->equals('longtext') || $remainder->equals('longblob') => Integer::UNSIGNED_4_BYTE_MAX,
