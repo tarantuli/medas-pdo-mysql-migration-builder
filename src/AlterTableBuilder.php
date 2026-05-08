@@ -13,10 +13,10 @@ use Medas\StorageManager\{Type, UnitOfWork\Priority};
 readonly class AlterTableBuilder
 {
     public function __construct(
+        private CollectionProcessor         $collectionProcessor,
         private FieldToDefinitionConverter  $fieldToDefinitionConverter,
         private ForeignKeyConstraintBuilder $foreignKeyConstraintBuilder,
         private IndexBuilder                $indexBuilder,
-        private JoinTableManager            $joinTableManager,
         private PdoStorageController        $pdoStorageController,
     )
     {
@@ -45,7 +45,7 @@ readonly class AlterTableBuilder
             );
         }
 
-        $this->processCollections($job);
+        $this->collectionProcessor->process($job);
 
         return $job->querySet;
     }
@@ -161,26 +161,5 @@ readonly class AlterTableBuilder
         return 'alter table '
             . $job->driverHandler->quote($job->database, $job->changes->name)
             . "\n";
-    }
-
-    private function processCollections(TableBuilders\Job $job): void
-    {
-        if (!$job->collections) {
-            return;
-        }
-
-        foreach ($job->collections as $collectionField) {
-            $queries = $this->joinTableManager->createQueries(
-                $job->database,
-                $job->blueprint,
-                $collectionField
-            );
-
-            if ($queries) {
-                foreach ($queries as $query) {
-                    $job->querySet[] = $query;
-                }
-            }
-        }
     }
 }

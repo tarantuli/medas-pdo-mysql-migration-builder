@@ -25,10 +25,6 @@ readonly class TableStructureStringFinder
 
     public function find(Table $table): string|null
     {
-        if (!$this->pdoStorageController->hasStore($table)) {
-            return null;
-        }
-
         $quotedTable = $this->pdoStorageController->quote($table->database, $table->name);
         $query = new Query('show create table ' . $quotedTable, [], $table->database);
 

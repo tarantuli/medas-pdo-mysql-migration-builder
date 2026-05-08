@@ -6,6 +6,7 @@ namespace Medas\PdoMysqlMigrationBuilder\Types;
 
 use Medas\Core\{Attributes\Service, Types\Integer};
 use Medas\MigrationBuilder\Structure\Blueprint\Field;
+use Medas\PdoMysqlMigrationBuilder\Exceptions\FieldValuesOutOfBounds;
 
 #[Service]
 readonly class IntegerHandler
@@ -19,18 +20,21 @@ readonly class IntegerHandler
             $field->minValue >= 0 && $field->maxValue <= Integer::UNSIGNED_4_BYTE_MAX => 'int unsigned',
             $field->minValue >= 0 && $field->maxValue <= Integer::UNSIGNED_8_BYTE_MAX => 'bigint unsigned',
 
-            $field->minValue >= -Integer::SIGNED_1_BYTE_MAX && $field->maxValue <= Integer::SIGNED_1_BYTE_MAX
+            $field->minValue >= Integer::SIGNED_1_BYTE_MIN && $field->maxValue <= Integer::SIGNED_1_BYTE_MAX
                 => 'tinyint',
 
-            $field->minValue >= -Integer::SIGNED_2_BYTE_MAX && $field->maxValue <= Integer::SIGNED_2_BYTE_MAX
+            $field->minValue >= Integer::SIGNED_2_BYTE_MIN && $field->maxValue <= Integer::SIGNED_2_BYTE_MAX
+                => 'smallint',
+
+            $field->minValue >= Integer::SIGNED_3_BYTE_MIN && $field->maxValue <= Integer::SIGNED_3_BYTE_MAX
                 => 'mediumint',
 
-            $field->minValue >= -Integer::SIGNED_3_BYTE_MAX && $field->maxValue <= Integer::SIGNED_3_BYTE_MAX => 'int',
+            $field->minValue >= Integer::SIGNED_4_BYTE_MIN && $field->maxValue <= Integer::SIGNED_4_BYTE_MAX => 'int',
 
-            $field->minValue >= -Integer::SIGNED_4_BYTE_MAX && $field->maxValue <= Integer::SIGNED_4_BYTE_MAX
+            $field->minValue >= Integer::SIGNED_8_BYTE_MIN && $field->maxValue <= Integer::SIGNED_8_BYTE_MAX
                 => 'bigint',
 
-            default => throw new \Exception('out of bounds value range'),
+            default => throw new FieldValuesOutOfBounds($field),
         };
     }
 }

@@ -149,7 +149,7 @@ readonly class TableStructureFinder
             $string,
             $match
         )) {
-            throw new \Exception('Invalid on delete/update action string');
+            throw new Exceptions\InvalidForeignKeyAction($string);
         }
 
         return Action::from(strtolower($match[1]));

@@ -17,10 +17,10 @@ use Medas\StorageManager\UnitOfWork\Priority;
 readonly class CreateTableBuilder
 {
     public function __construct(
+        private CollectionProcessor                       $collectionProcessor,
         private FieldToDefinitionConverter                $fieldToDefinitionConverter,
         private ForeignKeyConstraintBuilder               $foreignKeyConstraintBuilder,
         private IndexBuilder                              $indexBuilder,
-        private JoinTableManager                          $joinTableManager,
 
         #[ConfigValue(DefaultStrategy::class)]
         private OriginalClassStorageStrategy              $originalClassStorageStrategy,
@@ -55,7 +55,7 @@ readonly class CreateTableBuilder
             $job->querySet[] = new Query($query, [], $job->database, Priority::AddStoreRelations);
         }
 
-        $this->processCollections($job);
+        $this->collectionProcessor->process($job);
 
         return $job->querySet;
     }
@@ -67,7 +67,7 @@ readonly class CreateTableBuilder
                 // If this is the primary key, add it without generating value
                 $primaryIndex = $job->blueprint->primaryIndex();
 
-                if ($primaryIndex && in_array($field, $primaryIndex->fields())) {
+                if ($primaryIndex && in_array($field, $primaryIndex->fields(), true)) {
                     $foreignKey = new Blueprint\ForeignKey(
                         $field->name,
                         $field->store,
@@ -154,27 +154,6 @@ readonly class CreateTableBuilder
 
         foreach ($queries as $query) {
             $job->querySet[] = $query;
-        }
-    }
-
-    private function processCollections(TableBuilders\Job $job): void
-    {
-        if (!$job->collections) {
-            return;
-        }
-
-        foreach ($job->collections as $collectionField) {
-            $queries = $this->joinTableManager->createQueries(
-                $job->database,
-                $job->blueprint,
-                $collectionField
-            );
-
-            if ($queries) {
-                foreach ($queries as $query) {
-                    $job->querySet[] = $query;
-                }
-            }
         }
     }
 }
