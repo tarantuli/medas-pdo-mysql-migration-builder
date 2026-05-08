@@ -6,7 +6,7 @@ namespace Medas\PdoMysqlMigrationBuilder;
 
 use Medas\Core\Attributes\{ConfigValue, Service};
 use Medas\EntityManager\Attributes\Relations\Action;
-use Medas\MigrationBuilder\{MigrationBuilderManager, Structure\Blueprint};
+use Medas\MigrationBuilder\{BuilderResolver, Structure\Blueprint};
 use Medas\PdoStorage\ConfigOptions\JoinTables\TableNamingStrategy;
 use Medas\PdoStorage\Database;
 use Medas\PdoStorage\JoinTables\NamingStrategy;
@@ -17,8 +17,8 @@ readonly class JoinTableManager
 {
     public function __construct(
         #[ConfigValue(TableNamingStrategy::class)]
-        private NamingStrategy          $namingStrategy,
-        private MigrationBuilderManager $migrationBuilderManager,
+        private NamingStrategy  $namingStrategy,
+        private BuilderResolver $builderResolver,
     )
     {
     }
@@ -80,7 +80,7 @@ readonly class JoinTableManager
             ->addForeignKey($idForeignKey)
             ->addForeignKey($valueForeignKey);
 
-        return $this->migrationBuilderManager->for($database)
+        return $this->builderResolver->for($database)
             ->buildActions($database, $joinBlueprint);
     }
 

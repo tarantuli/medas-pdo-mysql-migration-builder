@@ -419,20 +419,21 @@
         },
         {
             "name": "morphp/medas-migration-builder",
-            "version": "v1.0.1",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tarantuli/medas-migration-builder.git",
-                "reference": "eb79f0622c78312b8ed7bcfd5a8cc39ed32ac2a6"
+                "reference": "5800e0cde5d11c1906650b1a1d87d57d7d258e78"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tarantuli/medas-migration-builder/zipball/eb79f0622c78312b8ed7bcfd5a8cc39ed32ac2a6",
-                "reference": "eb79f0622c78312b8ed7bcfd5a8cc39ed32ac2a6",
+                "url": "https://api.github.com/repos/tarantuli/medas-migration-builder/zipball/5800e0cde5d11c1906650b1a1d87d57d7d258e78",
+                "reference": "5800e0cde5d11c1906650b1a1d87d57d7d258e78",
                 "shasum": ""
             },
             "require": {
                 "morphp/medas-core": "^3",
+                "morphp/medas-file-builder": "^3",
                 "morphp/medas-storage-manager": "^4",
                 "php": "^8.4"
             },
@@ -463,10 +464,10 @@
                 "storage"
             ],
             "support": {
-                "source": "https://github.com/tarantuli/medas-migration-builder/tree/v1.0.1",
+                "source": "https://github.com/tarantuli/medas-migration-builder/tree/v1.0.2",
                 "issues": "https://github.com/tarantuli/medas-migration-builder/issues"
             },
-            "time": "2026-05-07T13:03:48+00:00"
+            "time": "2026-05-08T08:41:15+00:00"
         },
         {
             "name": "morphp/medas-object-to-array-serializer",
@@ -848,16 +849,16 @@
         },
         {
             "name": "morphp/medas-storage-manager",
-            "version": "v4.0.0",
+            "version": "v4.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tarantuli/medas-storage-manager.git",
-                "reference": "88d5fbda16a854644bc25ccc0eacad698783eb5f"
+                "reference": "203609c5740b5604dfe68e838b902c2b9b61aafe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tarantuli/medas-storage-manager/zipball/88d5fbda16a854644bc25ccc0eacad698783eb5f",
-                "reference": "88d5fbda16a854644bc25ccc0eacad698783eb5f",
+                "url": "https://api.github.com/repos/tarantuli/medas-storage-manager/zipball/203609c5740b5604dfe68e838b902c2b9b61aafe",
+                "reference": "203609c5740b5604dfe68e838b902c2b9b61aafe",
                 "shasum": ""
             },
             "require": {
@@ -867,7 +868,6 @@
                 "morphp/medas-console-printer": "^3",
                 "morphp/medas-core": "^3",
                 "morphp/medas-entity-manager": "^3",
-                "morphp/medas-file-builder": "^3",
                 "php": "^8.4"
             },
             "require-dev": {
@@ -897,10 +897,10 @@
                 "storage"
             ],
             "support": {
-                "source": "https://github.com/tarantuli/medas-storage-manager/tree/v4.0.0",
+                "source": "https://github.com/tarantuli/medas-storage-manager/tree/v4.0.1",
                 "issues": "https://github.com/tarantuli/medas-storage-manager/issues"
             },
-            "time": "2026-05-07T09:51:47+00:00"
+            "time": "2026-05-07T13:51:01+00:00"
         },
         {
             "name": "psr/event-dispatcher",

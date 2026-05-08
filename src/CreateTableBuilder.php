@@ -4,25 +4,28 @@ declare(strict_types=1);
 
 namespace Medas\PdoMysqlMigrationBuilder;
 
-use Medas\Core\Attributes\Service;
+use Medas\Core\Attributes\{ConfigValue, Service};
 use Medas\EntityManager\Attributes\Relations\Action;
-use Medas\MigrationBuilder\{
-    OriginalClassStorageStrategyActionBuilder\ForLinkingStore,
-    Structure\Blueprint
-};
+use Medas\MigrationBuilder\{OriginalClassStorageStrategyActionBuilder, Structure\Blueprint};
 use Medas\PdoStorage\{Database, PdoStorageController, Queries\Query, Queries\QuerySet};
-use Medas\StorageManager\{Type, UnitOfWork\Priority};
+use Medas\StorageManager\ConfigOptions\OriginalClassStorage\DefaultStrategy;
+use Medas\StorageManager\Inheritance\OriginalClassStorageStrategy;
+use Medas\StorageManager\Type;
+use Medas\StorageManager\UnitOfWork\Priority;
 
 #[Service]
 readonly class CreateTableBuilder
 {
     public function __construct(
-        private FieldToDefinitionConverter  $fieldToDefinitionConverter,
-        private ForLinkingStore             $forLinkingStore,
-        private ForeignKeyConstraintBuilder $foreignKeyConstraintBuilder,
-        private IndexBuilder                $indexBuilder,
-        private JoinTableManager            $joinTableManager,
-        private PdoStorageController        $pdoStorageController,
+        private FieldToDefinitionConverter                $fieldToDefinitionConverter,
+        private ForeignKeyConstraintBuilder               $foreignKeyConstraintBuilder,
+        private IndexBuilder                              $indexBuilder,
+        private JoinTableManager                          $joinTableManager,
+
+        #[ConfigValue(DefaultStrategy::class)]
+        private OriginalClassStorageStrategy              $originalClassStorageStrategy,
+        private OriginalClassStorageStrategyActionBuilder $actionBuilder,
+        private PdoStorageController                      $pdoStorageController,
     )
     {
     }
@@ -143,7 +146,13 @@ readonly class CreateTableBuilder
             return;
         }
 
-        foreach ($this->forLinkingStore->buildStoreActions($job->blueprint, $job->database) as $query) {
+        $queries = $this->actionBuilder->build(
+            $this->originalClassStorageStrategy,
+            $job->blueprint,
+            $job->database
+        );
+
+        foreach ($queries as $query) {
             $job->querySet[] = $query;
         }
     }
