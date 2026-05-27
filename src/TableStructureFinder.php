@@ -115,9 +115,9 @@ readonly class TableStructureFinder
 
         return array_map(function (string $name): string {
             // Strip backticks and any trailing prefix length e.g. (500)
-            $name = trim($name, ' `');
+            $name = preg_replace('/ \(\d+\)$/', '', $name);
 
-            return preg_replace('/\(\d+\)$/', '', $name);
+            return trim($name, '`');
         }, $names);
     }
 
