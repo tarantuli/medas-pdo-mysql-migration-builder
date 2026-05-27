@@ -78,7 +78,7 @@ readonly class TableStructureFinder
     protected function findKeys(TableStructureFinder\Job $job): void
     {
         if (!preg_match_all(
-            '/(?<isUnique>unique )?key `(?<name>[^`]+)` \((?<fields>[^)]+)\)/i',
+            '/(?<isUnique>unique )?key `(?<name>[^`]+)` \((?<fields>(?:[^()]|\(\d+\))+)\)/i',
             $job->createTable,
             $matches,
             PREG_SET_ORDER
@@ -113,7 +113,12 @@ readonly class TableStructureFinder
     {
         $names = explode(',', $nameString);
 
-        return array_map(fn($name) => trim($name, '`'), $names);
+        return array_map(function (string $name): string {
+            // Strip backticks and any trailing prefix length e.g. (500)
+            $name = trim($name, ' `');
+
+            return preg_replace('/\(\d+\)$/', '', $name);
+        }, $names);
     }
 
     protected function findForeignKeys(TableStructureFinder\Job $job): void
