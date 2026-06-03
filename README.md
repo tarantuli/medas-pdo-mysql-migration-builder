@@ -32,7 +32,7 @@ PdoMysqlMigrationBuilderPackage::instance();
 **Generating a migration:**
 
 ```bash
-php bin/console migration-builder:make-migration
+php bin/medas migration-builder:make-migration
 ```
 
 For a new `Invoice` entity, this generates something like:
@@ -58,7 +58,7 @@ SQL,
 **Running generated migrations:**
 
 ```bash
-php bin/console storage-manager:migrate
+php bin/medas storage-manager:migrate
 ```
 
 ### Backend user context
