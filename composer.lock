@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ae83f662c8201e22b586ee4e82ac36cd",
+    "content-hash": "3ba7c57ae7a939126002465141bceffa",
     "packages": [
         {
             "name": "morphp/medas-cache",
@@ -263,24 +263,24 @@
         },
         {
             "name": "morphp/medas-file-builder",
-            "version": "v3.0.1",
+            "version": "v4.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tarantuli/medas-file-builder.git",
-                "reference": "e6f5a29a0942384ea9f32c04b3c22b529db1ce13"
+                "reference": "3a836bcdb037f01758047c7078233aa56e10b44d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tarantuli/medas-file-builder/zipball/e6f5a29a0942384ea9f32c04b3c22b529db1ce13",
-                "reference": "e6f5a29a0942384ea9f32c04b3c22b529db1ce13",
+                "url": "https://api.github.com/repos/tarantuli/medas-file-builder/zipball/3a836bcdb037f01758047c7078233aa56e10b44d",
+                "reference": "3a836bcdb037f01758047c7078233aa56e10b44d",
                 "shasum": ""
             },
             "require": {
                 "morphp/medas-core": "^3",
-                "morphp/medas-php-formatter": "^3",
                 "php": "^8.4"
             },
             "require-dev": {
+                "morphp/medas-object-instantiator": "^3",
                 "morphp/medas-service-manager": "^3",
                 "phpunit/phpunit": "^10"
             },
@@ -306,10 +306,10 @@
                 "backend"
             ],
             "support": {
-                "source": "https://github.com/tarantuli/medas-file-builder/tree/v3.0.1",
+                "source": "https://github.com/tarantuli/medas-file-builder/tree/v4.0.1",
                 "issues": "https://github.com/tarantuli/medas-file-builder/issues"
             },
-            "time": "2026-02-27T12:39:37+00:00"
+            "time": "2026-06-03T12:28:37+00:00"
         },
         {
             "name": "morphp/medas-file-system",
@@ -363,23 +363,23 @@
         },
         {
             "name": "morphp/medas-migration-builder",
-            "version": "v1.0.6",
+            "version": "v1.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tarantuli/medas-migration-builder.git",
-                "reference": "545e83dbcab258e44b61e8833feba6162c172bcb"
+                "reference": "36cb9671ad2e71d1e77f7f5db2295019fe86bec9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tarantuli/medas-migration-builder/zipball/545e83dbcab258e44b61e8833feba6162c172bcb",
-                "reference": "545e83dbcab258e44b61e8833feba6162c172bcb",
+                "url": "https://api.github.com/repos/tarantuli/medas-migration-builder/zipball/36cb9671ad2e71d1e77f7f5db2295019fe86bec9",
+                "reference": "36cb9671ad2e71d1e77f7f5db2295019fe86bec9",
                 "shasum": ""
             },
             "require": {
                 "morphp/medas-console": "^3",
                 "morphp/medas-core": "^3",
                 "morphp/medas-entity-manager": "^3",
-                "morphp/medas-file-builder": "^3",
+                "morphp/medas-file-builder": "^4",
                 "morphp/medas-storage-manager": "^4",
                 "php": "^8.4"
             },
@@ -410,10 +410,10 @@
                 "storage"
             ],
             "support": {
-                "source": "https://github.com/tarantuli/medas-migration-builder/tree/v1.0.6",
+                "source": "https://github.com/tarantuli/medas-migration-builder/tree/v1.0.7",
                 "issues": "https://github.com/tarantuli/medas-migration-builder/issues"
             },
-            "time": "2026-05-27T09:12:57+00:00"
+            "time": "2026-06-03T13:08:09+00:00"
         },
         {
             "name": "morphp/medas-object-to-array-serializer",
@@ -573,63 +573,6 @@
                 "issues": "https://github.com/tarantuli/medas-php-class-analysis/issues"
             },
             "time": "2026-06-03T14:23:08+00:00"
-        },
-        {
-            "name": "morphp/medas-php-formatter",
-            "version": "v3.0.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/tarantuli/medas-php-formatter.git",
-                "reference": "5382a1a175317d027460bac8d31141d789ccb5f5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/tarantuli/medas-php-formatter/zipball/5382a1a175317d027460bac8d31141d789ccb5f5",
-                "reference": "5382a1a175317d027460bac8d31141d789ccb5f5",
-                "shasum": ""
-            },
-            "require": {
-                "morphp/medas-console": "^3",
-                "morphp/medas-core": "^3",
-                "morphp/medas-file-system": "^3",
-                "morphp/medas-php-class-analysis": "^3",
-                "morphp/medas-php-tokenizer": "^3",
-                "php": "^8.4"
-            },
-            "require-dev": {
-                "morphp/medas-config-manager": "^3",
-                "morphp/medas-config-options": "^3",
-                "morphp/medas-console-printer": "^4",
-                "morphp/medas-object-instantiator": "^3",
-                "morphp/medas-service-manager": "^3",
-                "phpunit/phpunit": "^10"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Medas\\PhpFormatter\\": "src/"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "Medas\\PhpFormatterTest\\": "tests/"
-                }
-            },
-            "authors": [
-                {
-                    "name": "Patrick Morpey",
-                    "email": "patrick@morphp.nl"
-                }
-            ],
-            "description": "Medas PHP formatter",
-            "keywords": [
-                "backend"
-            ],
-            "support": {
-                "source": "https://github.com/tarantuli/medas-php-formatter/tree/v3.0.8",
-                "issues": "https://github.com/tarantuli/medas-php-formatter/issues"
-            },
-            "time": "2026-06-03T14:26:24+00:00"
         },
         {
             "name": "morphp/medas-php-tokenizer",
