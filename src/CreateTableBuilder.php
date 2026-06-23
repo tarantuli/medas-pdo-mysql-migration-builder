@@ -48,7 +48,12 @@ readonly class CreateTableBuilder
 
         $job->baseQuery = substr($job->baseQuery, 0, -2);
         $job->baseQuery .= "\n)\n";
-        $job->querySet[] = new Query($job->baseQuery, [], $job->database, Priority::CreateStore);
+
+        $priority = $job->blueprint->isMigrationStore
+            ? Priority::CreateMigrationStore
+            : Priority::CreateStore;
+
+        $job->querySet[] = new Query($job->baseQuery, [], $job->database, $priority);
 
         if ($job->foreignKeys) {
             $query = sprintf("alter table %s\n%s", $tableName, implode(",\n", $job->foreignKeys));

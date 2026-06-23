@@ -80,7 +80,7 @@ readonly class JoinTableManager
             ->addForeignKey($idForeignKey)
             ->addForeignKey($valueForeignKey);
 
-        return $this->builderResolver->for($database)
+        return $this->builderResolver->find($database)
             ->buildActions($database, $joinBlueprint);
     }
 
