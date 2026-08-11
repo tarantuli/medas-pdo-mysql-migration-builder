@@ -14,9 +14,10 @@ readonly class BinaryHandler
     {
         /** @noinspection PhpDuplicateMatchArmBodyInspection */
         return match (true) {
-            $field->maxLength <= Integer::UNSIGNED_1_BYTE_MAX => $field->minLength === $field->maxLength
-                ? sprintf('binary(%u)', $field->maxLength)
-                : sprintf('varbinary(%u)', $field->maxLength),
+            $field->maxLength <= Integer::UNSIGNED_1_BYTE_MAX
+                => $field->minLength === $field->maxLength
+                    ? sprintf('binary(%u)', $field->maxLength)
+                    : sprintf('varbinary(%u)', $field->maxLength),
 
             $field->maxLength <= Integer::UNSIGNED_2_BYTE_MAX => 'blob',
             $field->maxLength <= Integer::UNSIGNED_3_BYTE_MAX => 'mediumblob',

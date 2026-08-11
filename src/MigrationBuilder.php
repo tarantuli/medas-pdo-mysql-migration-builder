@@ -31,7 +31,6 @@ readonly class MigrationBuilder implements MigraMigrationBuilder
 
     public function handles(Storage $storage): bool
     {
-        /** @noinspection PhpConditionAlreadyCheckedInspection */
         return $storage instanceof Database;
     }
 
@@ -90,7 +89,11 @@ PHP;
         }
 
         if ($existingStructure === null) {
-            return $this->createTableBuilder->create($storage, $blueprint);
+            return $this->createTableBuilder->create(
+                $storage,
+                $blueprint,
+                $ignoreExistingStructure
+            );
         }
 
         $changes = $this->changeFinder->find($blueprint, $existingStructure);

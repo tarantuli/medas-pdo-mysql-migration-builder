@@ -30,7 +30,7 @@ readonly class CreateTableBuilder
     {
     }
 
-    public function create(Database $database, Blueprint $blueprint): QuerySet
+    public function create(Database $database, Blueprint $blueprint, bool $ignoreExistingStructure = false): QuerySet
     {
         $job = new TableBuilders\Job(
             $database,
@@ -44,7 +44,7 @@ readonly class CreateTableBuilder
         $this->addFields($job);
         $this->addKeys($job);
         $this->processForeignKeys($job);
-        $this->handleOriginalEntityType($job);
+        $this->handleOriginalEntityType($job, $ignoreExistingStructure);
 
         $job->baseQuery = substr($job->baseQuery, 0, -2);
         $job->baseQuery .= "\n)\n";
@@ -60,7 +60,7 @@ readonly class CreateTableBuilder
             $job->querySet[] = new Query($query, [], $job->database, Priority::AddStoreRelations);
         }
 
-        $this->collectionProcessor->process($job);
+        $this->collectionProcessor->process($job, $ignoreExistingStructure);
 
         return $job->querySet;
     }
@@ -141,7 +141,7 @@ readonly class CreateTableBuilder
         }
     }
 
-    private function handleOriginalEntityType(TableBuilders\Job $job): void
+    private function handleOriginalEntityType(TableBuilders\Job $job, bool $ignoreExistingStructure): void
     {
         if (!$job->blueprint->storeOriginalClass) {
             return;
@@ -154,7 +154,8 @@ readonly class CreateTableBuilder
         $queries = $this->actionBuilder->build(
             $this->originalClassStorageStrategy,
             $job->blueprint,
-            $job->database
+            $job->database,
+            $ignoreExistingStructure
         );
 
         foreach ($queries as $query) {

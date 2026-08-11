@@ -26,7 +26,8 @@ readonly class JoinTableManager
     public function createQueries(
         Database        $database,
         Blueprint       $sourceBlueprint,
-        Blueprint\Field $field
+        Blueprint\Field $field,
+        bool            $ignoreExistingStructure = false
     ): iterable|null
     {
         if ($sourceBlueprint->primaryIndex() === null) {
@@ -81,7 +82,7 @@ readonly class JoinTableManager
             ->addForeignKey($valueForeignKey);
 
         return $this->builderResolver->find($database)
-            ->buildActions($database, $joinBlueprint);
+            ->buildActions($database, $joinBlueprint, $ignoreExistingStructure);
     }
 
     private function getIdField(Blueprint $sourceBlueprint): Blueprint\Field
