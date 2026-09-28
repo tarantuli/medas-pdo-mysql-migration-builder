@@ -78,7 +78,8 @@ readonly class CreateTableBuilder
                         $field->store,
                         $field->name,
                         Action::Cascade,
-                        Action::Cascade
+                        Action::Cascade,
+                        $job->blueprint->name
                     );
 
                     $job->blueprint->addForeignKey($foreignKey);
@@ -136,6 +137,10 @@ readonly class CreateTableBuilder
     protected function processForeignKeys(TableBuilders\Job $job): void
     {
         foreach ($job->blueprint->foreignKeys as $foreignKey) {
+            if ($foreignKey->store !== null && $foreignKey->store !== $job->blueprint->name) {
+                continue;
+            }
+
             $job->foreignKeys[] = $this->foreignKeyConstraintBuilder
                 ->buildAdd($job->blueprint->name, $job->driverHandler, $job->database, $foreignKey);
         }
