@@ -31,7 +31,9 @@ readonly class MigrationBuilder implements MigraMigrationBuilder
 
     public function handles(Storage $storage): bool
     {
-        return $storage instanceof Database;
+        // A PDO storage speaking the mysql driver (the DSN scheme); other PDO drivers have
+        // their own migration builder
+        return $storage instanceof Database && str_starts_with($storage->dsn, 'mysql:');
     }
 
     public function build(
